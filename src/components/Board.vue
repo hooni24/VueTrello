@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     fetchData() {
-      // backend에서 데이터를 호출한다
+      // backend에서 데이터를 호출한다!
       this.loading = true
       setTimeout(() => {
         this.bid = this.$route.params.bid

@@ -1,9 +1,12 @@
 <template>
   <div>
     Board
-    <div>bid: {{bid}}</div>
-    <router-link :to="`/b/${bid}/c/1`">Card 1</router-link>
-    <router-link :to="`/b/${bid}/c/2`">Card 2</router-link>
+    <div v-if="loading">loading board ...</div>
+    <div v-else>
+      <div>bid: {{bid}}</div>
+      <router-link :to="`/b/${bid}/c/1`">Card 1</router-link>
+      <router-link :to="`/b/${bid}/c/2`">Card 2</router-link>
+    </div>
     <hr />
     <router-view></router-view>
   </div>
@@ -11,12 +14,23 @@
 
 <script>
 export default {
-  created() {
-    this.bid = this.$route.params.bid
-  },
   data() {
     return {
-      bid: 0
+      bid: 0,
+      loading: false
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    fetchData() {
+      // backend에서 데이터를 호출한다
+      this.loading = true
+      setTimeout(() => {
+        this.bid = this.$route.params.bid
+        this.loading = false
+      }, 500)
     }
   }
 }

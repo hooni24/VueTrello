@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {board} from '../api'
 
 export default {
   data() {
@@ -38,16 +38,11 @@ export default {
   methods: {
     fetchData() {
       this.loading = true
-
-      axios.get('http://localhost:3000/boards')
-      .then(res => {
-        this.boards = res.data
+      board.fetch()
+      .then(data => {
+        this.boards = data
       })
-      .catch(res => {
-        // 로그인중이 아닌 경우(boards를 못 얻어옴) 로그인 페이지로 보냄
-        this.$router.replace('/login')
-      })
-      .finally(() => {
+      .finally(_ => {
         this.loading = false
       })
     }

@@ -59,9 +59,8 @@ export default {
         this.loading = false
       })
     },
-    onAddBoard(title) {
-      board.create(title)
-        .then(() => this.fetchData())
+    onAddBoard() {
+      this.fetchData()
     }
   }
 }

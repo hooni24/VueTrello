@@ -31,10 +31,8 @@ export const setAuthInHeader = token => {
 }
 
 export const board = {
-  fetch() {
-    return request({
-      url: "/boards"
-    })
+  fetch(id) {
+    return id ? request({url: `/boards/${id}`}) : request({url: "/boards"})
   },
   create(title) {
     return request({

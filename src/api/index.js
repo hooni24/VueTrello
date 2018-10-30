@@ -18,18 +18,32 @@ const request = ({method = "GET", url, data}) => {
     url: DOMAIN + url,
     data
   })
-  .then(res => result.data)
+  .then(res => res.data)
   .catch(err => {
     const {status} = err.response // http status 를 가져옴
-    if(status === UNAUTHORIZED) return onUnautorized()
-    throw Error(err)
+    if(status === UNAUTHORIZED) onUnautorized()
+    throw err.response
   })
+}
+
+export const setAuthInHeader = token => {
+  axios.defaults.headers.common['Authorization'] = token ? `Bearer ${token}` : null
 }
 
 export const board = {
   fetch() {
     return request({
       url: "/boards"
+    })
+  }
+}
+
+export const auth = {
+  login(email, password) {
+    return request({
+      method: "POST",
+      url: "/login",
+      data: {email, password}
     })
   }
 }

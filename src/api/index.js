@@ -35,6 +35,13 @@ export const board = {
     return request({
       url: "/boards"
     })
+  },
+  create(title) {
+    return request({
+      method: "POST",
+      url: "/boards",
+      data: { title }
+    })
   }
 }
 

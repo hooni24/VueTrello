@@ -5,14 +5,14 @@ import Login from '../components/Login'
 import NotFound from '../components/NotFound'
 import Board from '../components/Board'
 import Card from '../components/Card'
+import store from '../store'
 
 Vue.use(VueRouter)
 
 // to: 현재경로
 const requireAuth = (to, from, next) => {
-  const isAuth = localStorage.getItem('token')
   const loginPath = `/login?rPath=${encodeURIComponent(to.path)}`
-  isAuth ? next() : next(loginPath)
+  store.getters.isAuth ? next() : next(loginPath)
 }
 
 const router = new VueRouter({

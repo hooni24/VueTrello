@@ -33,6 +33,12 @@ const actions = {
       .then(res => {
         ctx.commit('SET_CARD', res.item)
       })
+  },
+  UPDATE_CARD(ctx, {id, title, description, pos, listId}) {
+    return card.update(id, {title, description, pos, listId})
+      .then(res => {
+        ctx.dispatch('FETCH_BOARD', {id: ctx.state.board.id})
+      })
   }
 }
 

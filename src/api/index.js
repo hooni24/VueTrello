@@ -69,5 +69,12 @@ export const card = {
     return request({
       url: `/cards/${id}`
     })
+  },
+  update(id, payload) {
+    return request({
+      method: 'PUT',
+      url: `/cards/${id}`,
+      data: payload
+    })
   }
 }

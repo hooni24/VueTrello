@@ -19,6 +19,9 @@ const mutations = {
     state.bodyColor = color || '#FFFFFF'
     state.navbarColor = color ? 'rgba(0,0,0,.15)' : '#026AA7'
   },
+  SET_IS_SHOW_BOARD_SETTINGS (state, toggle) {
+    state.isShowBoardSettings = toggle
+  },
   LOGIN (state, token) {
     if(!token) { return }
     state.token = token

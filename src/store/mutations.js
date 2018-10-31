@@ -15,6 +15,10 @@ const mutations = {
   SET_CARD (state, card) {
     state.card = card
   },
+  SET_THEME (state, color) {
+    state.bodyColor = color || '#FFFFFF'
+    state.navbarColor = color ? 'rgba(0,0,0,.15)' : '#026AA7'
+  },
   LOGIN (state, token) {
     if(!token) { return }
     state.token = token

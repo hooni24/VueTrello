@@ -5,7 +5,9 @@ const state = {
   boards: [],
   board: {},
   card: {},
-  token: null
+  token: null,
+  bodyColor: '#FFFFFF',
+  navbarColor: '#026AA7'
 }
 
 export default state

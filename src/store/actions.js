@@ -27,6 +27,12 @@ const actions = {
       .then(()=>{
         ctx.dispatch('FETCH_BOARD', {id: ctx.state.board.id})
       })
+  },
+  FETCH_CARD(ctx, {id}) {
+    return card.fetch(id)
+      .then(res => {
+        ctx.commit('SET_CARD', res.item)
+      })
   }
 }
 

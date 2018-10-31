@@ -64,5 +64,10 @@ export const card = {
         pos
       }
     })
+  },
+  fetch(id) {
+    return request({
+      url: `/cards/${id}`
+    })
   }
 }

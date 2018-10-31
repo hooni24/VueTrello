@@ -76,5 +76,11 @@ export const card = {
       url: `/cards/${id}`,
       data: payload
     })
+  },
+  destroy(id) {
+    return request({
+      method: 'DELETE',
+      url: `/cards/${id}`
+    })
   }
 }

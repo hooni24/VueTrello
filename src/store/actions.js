@@ -39,6 +39,12 @@ const actions = {
       .then(res => {
         ctx.dispatch('FETCH_BOARD', {id: ctx.state.board.id})
       })
+  },
+  DELETE_CARD(ctx, {id}) {
+    return card.destroy(id)
+      .then(res => {
+        ctx.dispatch('FETCH_BOARD', {id: ctx.state.board.id})
+      })
   }
 }
 

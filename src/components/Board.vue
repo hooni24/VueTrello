@@ -22,13 +22,15 @@
 <script>
 import {mapState, mapActions} from 'vuex'
 import List from './List.vue'
+import dragger from '../utils/dragger'
 
 export default {
   components: { List },
   data() {
     return {
       bid: 0,
-      loading: false
+      loading: false,
+      cDragger: null
     }
   },
   computed: {
@@ -39,9 +41,13 @@ export default {
   created() {
     this.fetchData()
   },
+  updated() {
+    this.setCardDraggable()
+  },
   methods: {
     ...mapActions([
-      'FETCH_BOARD'
+      'FETCH_BOARD',
+      'UPDATE_CARD'
     ]),
     fetchData() {
       // backend에서 데이터를 호출한다!
@@ -50,6 +56,37 @@ export default {
         .then(() => {
           this.loading = false
         })
+    },
+    setCardDraggable() {
+      if(this.cDragger) this.cDragger.destroy()
+      this.cDragger = dragger.init(Array.from(this.$el.querySelectorAll('.card-list')))
+
+      this.cDragger.on('drop', (el, wrapper, target, siblings) => {
+        const targetCard = {
+          id: el.dataset.cardId * 1,
+          pos: 65535
+        }
+
+        const {prev, next} = dragger.sibling({
+          el, 
+          wrapper, 
+          candidates: Array.from(wrapper.querySelectorAll('.card-item')), 
+          type: 'card'
+        })
+
+        if(!prev && next) {
+          // 맨 앞에 카드다
+          targetCard.pos = next.pos / 2
+        } else if (!next && prev) {
+          // 맨 뒤에 카드다
+          targetCard.pos = prev.pos * 2
+        } else if(next && prev) {
+          // 중간에 카드다
+          targetCard.pos = (prev.pos + next.pos) / 2
+        }
+
+        this.UPDATE_CARD(targetCard)
+      })
     }
   }
 }

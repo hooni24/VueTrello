@@ -52,3 +52,17 @@ export const auth = {
     })
   }
 }
+
+export const card = {
+  create(title, listId, pos) {
+    return request({
+      method: 'POST',
+      url: '/cards',
+      data: {
+        title, 
+        listId, 
+        pos
+      }
+    })
+  }
+}

@@ -1,6 +1,6 @@
 /** vuex 권장방식대로 action을 분리 */
 
-import {board, auth} from '../api'
+import {board, auth, card} from '../api'
 
 const actions = {
   LOGIN({commit}, {email, password}) {
@@ -20,6 +20,12 @@ const actions = {
     return board.fetch(id)
       .then(res => {
         commit('SET_BOARD', res.item)
+      })
+  },
+  ADD_CARD(ctx, {title, listId, pos}) {
+    return card.create(title, listId, pos)
+      .then(()=>{
+        ctx.dispatch('FETCH_BOARD', {id: ctx.state.board.id})
       })
   }
 }

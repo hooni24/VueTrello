@@ -8,8 +8,12 @@ import router from '../router'
 
 const DOMAIN = 'http://localhost:3000'
 const UNAUTHORIZED = 401
+const NOT_FOUND = 404
 const onUnautorized = () => {
   router.push('/login')
+}
+const onNotFound = () => {
+  router.push('/')
 }
 
 const request = ({method = "GET", url, data}) => {
@@ -22,6 +26,7 @@ const request = ({method = "GET", url, data}) => {
   .catch(err => {
     const {status} = err.response // http status 를 가져옴
     if(status === UNAUTHORIZED) onUnautorized()
+    else if (status === NOT_FOUND) onNotFound()
     throw err.response
   })
 }
@@ -39,6 +44,19 @@ export const board = {
       method: "POST",
       url: "/boards",
       data: { title }
+    })
+  },
+  destroy(id) {
+    return request({
+      method: 'DELETE',
+      url: `/boards/${id}`
+    })
+  },
+  update(id, payload) {
+    return request({
+      method: 'PUT',
+      url: `/boards/${id}`,
+      data: payload
     })
   }
 }

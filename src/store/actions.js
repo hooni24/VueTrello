@@ -10,6 +10,13 @@ const actions = {
   ADD_BOARD (_, {title}) {
     return board.create(title).then(res => res.item)
   },
+  DELETE_BOARD(_, {id}) {
+    return board.destroy(id)
+  },
+  UPDATE_BOARD(ctx, {id, title, bgColor}) {
+    return board.update(id, {title, bgColor})
+      .then(() => ctx.dispatch('FETCH_BOARD', { id: ctx.state.board.id }))
+  },
   FETCH_BOARDS({commit}) {
     return board.fetch()
       .then(res => {

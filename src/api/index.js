@@ -85,6 +85,12 @@ export const list = {
       url: `/lists/${id}`,
       data: payload
     })
+  },
+  destroy(id) {
+    return request({
+      method: 'DELETE',
+      url: `/lists/${id}`
+    })
   }
 }
 

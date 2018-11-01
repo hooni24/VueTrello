@@ -123,9 +123,9 @@ export default {
     height: 100px;
     border-radius: 8px;
   }
-  .color-picker a:hover,
+  /* .color-picker a:hover,
   .color-picker a:focus {
-    /* cursor: pointer; */
-    /* background-color: rgba(0,0,0,.9); */
-  }
+    cursor: pointer;
+    background-color: rgba(0,0,0,.9);
+  } */
 </style>

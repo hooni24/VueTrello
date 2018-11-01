@@ -3,7 +3,9 @@
     <div class="board-wrapper">
       <div class="board">
         <div class="board-header">
-          <span class="board-title">{{ board.title }}</span>
+          <input class="form-control" type="text" v-if="isEditTitle" v-model="inputTitle" 
+            ref="inputTitle" @blur="onSubmitTitle" @keyup.enter="onSubmitTitle" />
+          <span  v-else class="board-title" @click="onClickTitle">{{board.title}}</span>
           <a class="board-header-btn show-menu" href="" @click.prevent="onShowSettings">... Show Menu</a>
         </div>
       
@@ -33,7 +35,9 @@ export default {
     return {
       bid: 0,
       loading: false,
-      cDragger: null
+      cDragger: null,
+      isEditTitle: false,
+      inputTitle: ''
     }
   },
   computed: {
@@ -44,9 +48,13 @@ export default {
   },
   created() {
     this.fetchData().then(() => {
+      this.inputTitle = this.board.title
       this.SET_THEME(this.board.bgColor)
       this.SET_IS_SHOW_BOARD_SETTINGS(false)
     })
+  },
+  mounted() {
+
   },
   updated() {
     this.setCardDraggable()
@@ -58,7 +66,8 @@ export default {
     ]),
     ...mapActions([
       'FETCH_BOARD',
-      'UPDATE_CARD'
+      'UPDATE_CARD',
+      'UPDATE_BOARD'
     ]),
     fetchData() {
       // backend에서 데이터를 호출한다!
@@ -101,6 +110,21 @@ export default {
     },
     onShowSettings() {
       this.SET_IS_SHOW_BOARD_SETTINGS(true)
+    },
+    onClickTitle() {
+      this.isEditTitle = true
+      this.$nextTick(() => this.$refs.inputTitle.focus())
+    },
+    onSubmitTitle() {
+      this.isEditTitle = false
+      this.inputTitle = this.inputTitle.trim()
+      if(!this.inputTitle) return
+
+      const id = this.board.id
+      const title = this.inputTitle
+      if(title === this.board.title) return
+
+      this.UPDATE_BOARD({id, title})
     }
   }
 }

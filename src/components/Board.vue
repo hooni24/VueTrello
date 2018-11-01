@@ -3,16 +3,19 @@
     <div class="board-wrapper">
       <div class="board">
         <div class="board-header">
-          <input class="form-control" type="text" v-if="isEditTitle" v-model="inputTitle" 
+          <dinput class="form-control" type="text" v-if="isEditTitle" v-model="inputTitle" 
             ref="inputTitle" @blur="onSubmitTitle" @keyup.enter="onSubmitTitle" />
           <span  v-else class="board-title" @click="onClickTitle">{{board.title}}</span>
           <a class="board-header-btn show-menu" href="" @click.prevent="onShowSettings">... Show Menu</a>
         </div>
       
-        <div class="list-section-wrapper div">
-          <div class="list-section div">
-            <div class="list-wrapper div" v-for="list in board.lists" :key="list.pos">
+        <div class="list-section-wrapper">
+          <div class="list-section">
+            <div class="list-wrapper" v-for="list in board.lists" :key="list.pos" :data-list-id="list.id">
               <List :data="list" />
+            </div>
+            <div class="list-wrapper">
+              <AddList />
             </div>
           </div>
         </div>
@@ -28,14 +31,16 @@ import {mapState, mapActions, mapMutations} from 'vuex'
 import List from './List.vue'
 import dragger from '../utils/dragger'
 import BoardSetting from './BoardSetting.vue'
+import AddList from './AddList.vue'
 
 export default {
-  components: { List, BoardSetting },
+  components: { List, BoardSetting, AddList },
   data() {
     return {
       bid: 0,
       loading: false,
       cDragger: null,
+      lDragger: null,
       isEditTitle: false,
       inputTitle: ''
     }
@@ -58,6 +63,7 @@ export default {
   },
   updated() {
     this.setCardDraggable()
+    this.setListDraggable()
   },
   methods: {
     ...mapMutations([
@@ -67,7 +73,8 @@ export default {
     ...mapActions([
       'FETCH_BOARD',
       'UPDATE_CARD',
-      'UPDATE_BOARD'
+      'UPDATE_BOARD',
+      'UPDATE_LIST'
     ]),
     fetchData() {
       // backend에서 데이터를 호출한다!
@@ -106,6 +113,41 @@ export default {
         }
 
         this.UPDATE_CARD(targetCard)
+      })
+    },
+    setListDraggable() {
+      if(this.lDragger) this.lDragger.destroy()
+      const options = {
+        invalid: (el, handler) => !/^list/.test(handler.className)
+      }
+
+      this.lDragger = dragger.init(Array.from(this.$el.querySelectorAll('.list-section')), options)
+
+      this.lDragger.on('drop', (el, wrapper, target, siblings) => {
+        const targetList = {
+          listId: el.dataset.listId * 1,
+          pos: 65535
+        }
+
+        const {prev, next} = dragger.sibling({
+          el, 
+          wrapper, 
+          candidates: Array.from(wrapper.querySelectorAll('.list')), 
+          type: 'list'
+        })
+
+        if(!prev && next) {
+          // 맨 왼쪽 리스트다
+          targetList.pos = next.pos / 2
+        } else if (!next && prev) {
+          // 맨 오른쪽 리스트다
+          targetList.pos = prev.pos * 2
+        } else if(next && prev) {
+          // 중간에 리스트다
+          targetList.pos = (prev.pos + next.pos) / 2
+        }
+
+        this.UPDATE_LIST(targetList)
       })
     },
     onShowSettings() {
@@ -192,7 +234,7 @@ export default {
   }
   .list-wrapper {
     display: inline-block;
-    height: 100%;
+    /* height: 100%; */
     width: 272px;
     vertical-align: top;
     margin-right: 5px;

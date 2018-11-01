@@ -35,6 +35,16 @@ export const setAuthInHeader = token => {
   axios.defaults.headers.common['Authorization'] = token ? `Bearer ${token}` : null
 }
 
+export const auth = {
+  login(email, password) {
+    return request({
+      method: "POST",
+      url: "/login",
+      data: {email, password}
+    })
+  }
+}
+
 export const board = {
   fetch(id) {
     return id ? request({url: `/boards/${id}`}) : request({url: "/boards"})
@@ -61,12 +71,19 @@ export const board = {
   }
 }
 
-export const auth = {
-  login(email, password) {
+export const list = {
+  create(payload) {
     return request({
-      method: "POST",
-      url: "/login",
-      data: {email, password}
+      method: 'POST',
+      url: '/lists',
+      data: payload
+    })
+  },
+  update(id, payload) {
+    return request({
+      method: 'PUT',
+      url: `/lists/${id}`,
+      data: payload
     })
   }
 }
